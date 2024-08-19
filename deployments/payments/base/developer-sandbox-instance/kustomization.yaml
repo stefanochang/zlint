@@ -10,7 +10,7 @@ commonLabels:
   app.kubernetes.io/name: payments
 
 components:
-  - git@github.com:turo/argocd-deployment-templates/components/analysis-template-removal?ref=v18.3.0
+  - git@github.com:turo/argocd-deployment-templates/components/analysis-template-removal?ref=v19.1.0
 
 resources:
   - ../common
