@@ -22,5 +22,5 @@ jobs:
           paths: |
             deployments/**:
               - <!--Checkmate select=1-->
-              - I have tested my changes in a sandbox: sbx link
+              - I have tested my changes in a sandbox
               - My changes do not affect sandboxes
