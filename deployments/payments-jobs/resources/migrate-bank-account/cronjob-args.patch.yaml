@@ -1,0 +1,5 @@
+- op: add
+  path: /spec/jobTemplate/spec/template/spec/containers/0/args
+  value:
+    - >-
+      exec java ${JAVA_DOCKER_MEMORY_OPTS} ${JAVA_OPTS} ${NEW_RELIC_OPTS} -Djava.security.egd=file:/dev/./urandom -jar /${JAR_ARTIFACT} migrate-bank-accounts

@@ -1,0 +1,55 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+commonAnnotations:
+  environment: test-subaccount-2
+
+resources:
+  - ../../base/cluster-install
+  - payments-sealed-secret.yaml
+
+commonLabels:
+  app.kubernetes.io/component: api
+  app.kubernetes.io/name: payments
+
+components:
+  - ../../components/service-account
+
+patches:
+  - path: service-account.patch.yaml
+    target:
+      kind: ServiceAccount
+  - path: payments-secret-ref.patch.yaml
+    target:
+      kind: Rollout
+  - path: application-config.version.patch.yaml
+    target:
+      kind: ConfigMap
+      name: application-config
+  - path: application-config.patch.yaml
+  - path: new-relic-deployment-mark-secret-ref.patch.yaml
+    target:
+      kind: AnalysisTemplate
+      name: new-relic-deployment-mark
+
+configMapGenerator:
+  - behavior: merge
+    literals:
+      - MANAGEMENT_METRICS_EXPORT_NEWRELIC_ACCOUNTID=3669650
+      - NEW_RELIC_ACCOUNT_ID=3669650
+      - NEW_RELIC_ERROR_COLLECTOR_IGNORE_STATUS_CODES=404,400
+      - DATASOURCE_HOST_PORT=payments-database-mysql-80.cluster-codxnrp7n2dv.us-east-1.rds.amazonaws.com
+      - DATASOURCE_USERNAME=payments_service_iam
+      - DATASOURCE_DATABASE_NAME=payments
+      - DATASOURCE_AURORA_CERTIFICATE=/aurora-cert/global-bundle.pem
+      - SPRING_PROFILES_ACTIVE=test-2,log-json
+      - QUEUE_PAYMENTSTODUNLOP_PAYEREVENTS_URL=https://sqs.us-east-1.amazonaws.com/445973224478/payments-sqs-payment-accounts-sqs-queue
+      - CLOUD_AWS_SQS_REGION=us-east-1
+      - CLOUD_AWS_SQS_PROVIDER=aws
+      - SPRING_CLOUD_AWS_REGION_STATIC=us-east-1
+      - SPRING_KAFKA_BOOTSTRAPSERVERS=b-1.eventbusmskcluster.mjal8h.c6.kafka.us-east-1.amazonaws.com:9098,b-2.eventbusmskcluster.mjal8h.c6.kafka.us-east-1.amazonaws.com:9098,b-3.eventbusmskcluster.mjal8h.c6.kafka.us-east-1.amazonaws.com:9098
+    name: app
+
+images:
+  - name: turo/payments-msvc
+    newTag: 1.139.1

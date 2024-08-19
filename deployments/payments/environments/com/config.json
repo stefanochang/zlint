@@ -1,0 +1,12 @@
+{
+  "appName": "payments",
+  "userGivenName": "payments",
+  "destNamespace": "payments",
+  "destServer": "https://kubernetes.default.svc",
+  "srcPath": "deployments/payments/environments/com",
+  "srcRepoURL": "git@github.com:turo/payments-deployments.git",
+  "srcTargetRevision": "HEAD",
+  "labels": null,
+  "annotations": null,
+  "autoSync": false
+}

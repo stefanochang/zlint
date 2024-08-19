@@ -1,0 +1,4 @@
+[production]
+host=payments-database-mysql-80.cluster-codxnrp7n2dv.us-east-1.rds.amazonaws.com
+schema=payments
+ssl_ca=/aurora-cert/global-bundle.pem

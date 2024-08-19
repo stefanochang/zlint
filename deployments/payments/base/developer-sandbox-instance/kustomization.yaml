@@ -1,0 +1,44 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namePrefix: payments-
+
+commonAnnotations:
+  turo.com/team: payments
+
+commonLabels:
+  app.kubernetes.io/name: payments
+
+components:
+  - git@github.com:turo/argocd-deployment-templates/components/analysis-template-removal?ref=v18.3.0
+
+resources:
+  - ../common
+  - service-account.yaml
+  - msvc-sealed-secret.yaml
+
+    # CLOUD_AWS_SQS_REGION is old config. we will remove once we confirm awsspring 3.x works fine in any env including sbx3.0
+    # SPRING_CLOUD_AWS_REGION_STATIC is new config for awsspring 3.x
+    # topic name has sbx-id dependency. refer to payments-tf-config in dev-sandbox-deployment
+    # TODO: fix this to automate topic name per sandbox
+configMapGenerator:
+  - behavior: merge
+    literals:
+      - SPRING_PROFILES_ACTIVE=sandbox,log-json
+      - CLOUD_AWS_SQS_REGION=us-east-1
+      - SPRING_CLOUD_AWS_REGION_STATIC=us-east-1
+      - SPRING_KAFKA_BOOTSTRAPSERVERS=b-1.eventbusmskcluster.l6qsw7.c5.kafka.us-east-1.amazonaws.com:9098,b-2.eventbusmskcluster.l6qsw7.c5.kafka.us-east-1.amazonaws.com:9098,b-3.eventbusmskcluster.l6qsw7.c5.kafka.us-east-1.amazonaws.com:9098
+      - KAFKA_TOPICS_STRIPEPAYERTRANSACTIONS_TOPICNAME=sbx-1928-dunlop-payments-stripe-payer-transactions
+      - KAFKA_TOPICS_STRIPEPAYERTRANSACTIONS_SCHEMANAME=StripeEvent
+      - KAFKA_USEMSK=true
+      - KAFKA_REGISTRYNAME=sbx3-registry
+    name: app
+
+patches:
+  - path: rollout.patch.yaml
+    target:
+      kind: Rollout
+
+images:
+  - name: turo/payments-msvc
+    newTag: 1.139.1

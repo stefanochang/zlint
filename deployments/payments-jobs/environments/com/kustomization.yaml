@@ -1,0 +1,46 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+commonAnnotations:
+  environment: com
+
+resources:
+  - ../../base
+  - payments-jobs-sealed-secret.yaml
+
+components:
+  - ../../components/service-account
+
+patches:
+  - path: migrate-payer-account-secret-ref.patch.yaml
+    target:
+      kind: CronJob
+  - path: service-account-annotations.patch.yaml
+    target:
+      kind: ServiceAccount
+
+configMapGenerator:
+  - behavior: merge
+    literals:
+      - ENVIRONMENT=com
+      - DUNLOP_DATABASE_NAME=relayrides
+      - MIGRATION_DUNLOP_DATASOURCE_HOST=dunlop-core-mysql-57.cluster-ro-crxofechq76j.us-east-1.rds.amazonaws.com
+      - MIGRATION_PAYMENTS_DATASOURCE_HOST=payments-database-mysql-80.cluster-crxofechq76j.us-east-1.rds.amazonaws.com
+      - MIGRATION_PAYMENTS_DATASOURCE_USERNAME=payments_service_iam
+      - REGION=us-east-1
+      - PORT=3306
+      - RECONCILE_PAYER_ACCOUNTS=True
+      - RECONCILE_RECIPIENT_ACCOUNTS=True
+      - RECONCILE_EXTERNAL_ACCOUNTS=True
+      - DATASOURCE_AURORA_CERTIFICATE_PATH=/aurora-cert/global-bundle.pem
+      - WEBHOOK_ENABLED=True
+    name: reconciliation-cronjob
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+images:
+  - name: turo/payments-jobs
+    newTag: 1.82.0
+  - name: turo/payments-reconciliation
+    newTag: 1.61.0

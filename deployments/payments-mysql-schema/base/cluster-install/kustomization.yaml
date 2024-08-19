@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+commonAnnotations:
+  app: payments-mysql
+  team: payments
+  turo.com/team: payments
+
+commonLabels:
+  app.kubernetes.io/component: job
+  app.kubernetes.io/name: payments-mysql
+
+resources:
+  - ../common
+  - git@github.com:turo/argocd-deployment-templates/common/base?ref=v18.3.0

@@ -1,0 +1,11 @@
+- op: add
+  path: /spec/jobTemplate/spec/template/spec/volumes
+  value:
+    - name: aurora-cert-volume-mount
+      configMap:
+        name: aurora-cert-volume
+- op: add
+  path: /spec/jobTemplate/spec/template/spec/containers/0/volumeMounts
+  value:
+    - name: aurora-cert-volume-mount
+      mountPath: /aurora-cert

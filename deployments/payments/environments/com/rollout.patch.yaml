@@ -1,0 +1,6 @@
+- op: replace
+  path: /spec/template/spec/containers/0/envFrom/1/secretRef/name
+  value: payments.afa65df9a49fba20d4fbd12caf689381
+- op: replace
+  path: /spec/template/spec/serviceAccountName
+  value: payments-msvc-service-account

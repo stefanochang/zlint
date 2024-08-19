@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+commonLabels:
+  app.kubernetes.io/name: payments
+
+resources:
+  - git@github.com:turo/argocd-deployment-templates/rollout/spring-boot/base?ref=v18.3.0
+
+components:
+  - git@github.com:turo/argocd-deployment-templates/components/aurora-certificate?ref=v18.3.0
+
+configMapGenerator:
+  - name: app
+    behavior: merge
+    literals:
+      - CODE_REPOSITORY_URL=https://github.com/turo/payments-msvc
+      - NEW_RELIC_LOG_EXTENSION_ADD_MDC=true
+
+images:
+  - name: image_name
+    newName: turo/payments-msvc

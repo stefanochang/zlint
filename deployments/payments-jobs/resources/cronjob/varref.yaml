@@ -1,0 +1,9 @@
+varReference:
+  - path: spec/jobTemplate/spec/template/metadata/labels
+    kind: CronJob
+  - path: spec/jobTemplate/spec/template/metadata/annotations
+    kind: CronJob
+  - path: spec/jobTemplate/spec/template/spec/containers/name
+    kind: CronJob
+  - path: spec/jobTemplate/spec/template/spec/serviceAccountName
+    kind: CronJob

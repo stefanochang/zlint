@@ -1,0 +1,12 @@
+{
+  "appName": "payments-mysql-schema",
+  "userGivenName": "payments-mysql-schema",
+  "destNamespace": "payments",
+  "destServer": "https://kubernetes.default.svc",
+  "srcPath": "deployments/payments-mysql-schema/environments/xyz",
+  "srcRepoURL": "git@github.com:turo/payments-deployments.git",
+  "srcTargetRevision": "HEAD",
+  "labels": null,
+  "annotations": null,
+  "autoSync": true
+}

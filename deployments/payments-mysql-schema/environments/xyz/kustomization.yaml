@@ -1,0 +1,40 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+commonAnnotations:
+  environment: xyz
+
+resources:
+  - ../../base/cluster-install
+  - payments-mysql-sealed-secret.yaml
+
+patches:
+  - path: payments-mysql-secret-ref.patch.yaml
+    target:
+      kind: Job
+  - path: rollout-service-account.patch.yaml
+    target:
+      kind: Job
+  - path: schema-migration-job-name.patch.yaml
+    target:
+      kind: Job
+      name: schema-migration
+
+configMapGenerator:
+  - behavior: create
+    files:
+      - ./resources/skeema
+      - ./resources/my.cnf
+    name: schema-migration-config
+  - behavior: merge
+    literals:
+      - NOTIFICATION_WEBHOOK=https://hooks.slack.com/services/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
+      - NEW_RELIC_APPLICATION_ID=2777362
+    name: schema-migration
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+images:
+  - name: turo/payments-mysql-schema
+    newTag: 1.18.0

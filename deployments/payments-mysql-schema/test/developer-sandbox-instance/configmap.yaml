@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sandbox-config
+  annotations:
+    turo.com/aws-account-id: "749143309851"
+    turo.com/dns-name: sbx-138.developer-sandbox-k124-v01.sbx.rr.mu
+    turo.com/k8s-cluster: developer-sandbox-k124-v01
+    turo.com/sandbox-id: sbx-138
+    turo.com/github-owner: tagoro9
+    github.com/pull-request: "https://github.com/turo/dev-sbx-deployments/pull/133"
+data:
+  key: ""

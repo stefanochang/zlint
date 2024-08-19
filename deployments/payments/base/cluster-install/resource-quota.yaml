@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: payments
+  namespace: payments
+spec:
+  hard:
+    # HPA max is 6 replicas in this namespace. With 2 CPU and 2Gi memory ContainerLimit requested,
+    # we think we need 12 CPU and 12 Gi. However, use 5x what we think we need so that we can
+    # make infrequent adjustments here.
+    requests.cpu: "60"
+    requests.memory: "60Gi"
+    # For JVM based applications, limit should be 1.2x the request values
+    limits.cpu: "72"
+    limits.memory: "72Gi"

@@ -1,0 +1,40 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namePrefix: bank-accounts-
+
+commonAnnotations:
+  app: payments-jobs
+  team: payments
+  turo.com/team: payments
+
+commonLabels:
+  app.kubernetes.io/component: job
+  app.kubernetes.io/name: payments-jobs
+
+resources:
+  - ../cronjob
+
+components:
+  - git@github.com:turo/argocd-deployment-templates/components/aurora-certificate?ref=v18.3.0
+
+patches:
+  - path: cronjob-name.patch.yaml
+    target:
+      kind: CronJob
+  - path: cronjob-args.patch.yaml
+    target:
+      kind: CronJob
+  - path: cronjob-schedule.patch.yaml
+    target:
+      kind: CronJob
+  - path: cronjob-service-accounts.patch.yaml
+    target:
+      kind: CronJob
+  - path: cronjob-volume.patch.yaml
+    target:
+      kind: CronJob
+
+images:
+  - name: image_name
+    newName: turo/payments-jobs

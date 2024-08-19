@@ -1,0 +1,33 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namePrefix: payments-schema-
+
+commonAnnotations:
+  environment: developer-sandbox
+
+commonLabels:
+  app.kubernetes.io/name: payments-schema
+
+resources:
+  - ../common
+  - service-account.yaml
+  - mysql-sealed-secret.yaml
+
+configMapGenerator:
+  - behavior: merge
+    literals:
+      - NEW_RELIC_APP_NAME=SBX_ID-payments-mysql-schema
+    name: schema-migration
+
+patches:
+  - path: job.patch.yaml
+    target:
+      kind: Job
+  - path: mysql-secret-ref.patch.yaml
+    target:
+      kind: Job
+
+images:
+  - name: turo/payments-mysql-schema
+    newTag: 1.18.0

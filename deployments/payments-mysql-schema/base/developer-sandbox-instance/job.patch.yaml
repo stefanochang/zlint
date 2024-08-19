@@ -1,0 +1,17 @@
+- op: replace
+  path: /spec/template/spec/volumes/0/configMap/name
+  value: payments-schema-tf-config
+- op: replace
+  path: /spec/template/spec/containers/0/name
+  value: payments-schema-migration
+- op: add
+  path: /spec/template/spec/serviceAccountName
+  value: mysql
+- op: add
+  path: /spec/template/spec/containers/0/env
+  value: []
+- op: add
+  path: /spec/template/spec/containers/0/env/-
+  value:
+    name: NEW_RELIC_APP_NAME
+    value: SBX_ID-payments-mysql-schema

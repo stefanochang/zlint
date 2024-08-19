@@ -1,0 +1,3 @@
+- op: replace
+  path: /metadata/name
+  value: micros-schema-migration-job-1.18.0
